@@ -14,19 +14,13 @@ function RenderResults() {
   return (
     <KBarResults
       items={results}
-      onRender={({ item, active }) =>
-        typeof item === 'string' ? (
-          <div>{item}</div>
-        ) : (
-          <div
-            style={{
-              background: active ? '#eee' : 'transparent'
-            }}
-          >
+      onRender={({ item, active }) => (
+        <div className="flex items-center h-auto gap-5 max-w-fit">
+          <span className="text-md w-full px-2 rounded-lg hover:bg-zinc-200 p-5">
             {item.name}
-          </div>
-        )
-      }
+          </span>
+        </div>
+      )}
     />
   )
 }
@@ -45,17 +39,17 @@ function App() {
       name: 'Contact',
       shortcut: ['c'],
       keywords: 'email',
-      perform: () => (window.location.pathname = 'contact')
+      perform: () => (window.location.pathname = 'contact') // Pra mudar o redirecionamento
     }
   ]
 
   return (
     <KBarProvider actions={actions}>
-      <KBarPortal>
-        <KBarPositioner className="z-30 bg-secondary/60 backdrop-blur-md backdrop-filter">
-          <KBarAnimator className="mx-auto w-[32rem] overflow-hidden rounded-xl border-[1px] border-tertiary bg-secondary/60 px-4 drop-shadow-2xl ">
+      <KBarPortal className="">
+        <KBarPositioner className="h-auto z-30 bg-gray-200/10 backdrop-blur-md backdrop-filter">
+          <KBarAnimator className="h-auto mx-auto w-[32rem] overflow-hidden rounded-xl border bg-white px-4 drop-shadow-2xl ">
             <div className="mx-2 flex items-end justify-between py-4">
-              <KBarSearch className="w-full rounded-md border-b border-none border-gray-300 bg-transparent pt-2 text-gray-100 outline-none" />
+              <KBarSearch className="w-full border rounded-md px-3 py-2 border-zinc-400 bg-transparent pt-2 text-black outline-none" />
             </div>
 
             <RenderResults />
@@ -63,8 +57,8 @@ function App() {
           </KBarAnimator>
         </KBarPositioner>
       </KBarPortal>
-      <main className="flex h-screen items-center justify-center">
-        <span className="font-bold text-white">Ctrl + K</span>
+      <main className="flex bg-zinc-200 h-screen items-center justify-center">
+        <span className="font-medium text-black">Ctrl + K</span>
       </main>
     </KBarProvider>
   )
