@@ -9,12 +9,14 @@ import {
 } from 'kbar'
 import { Search } from 'lucide-react'
 import { useState } from 'react'
+import axios from 'axios'
+import { fetch } from './service'
 
 function RenderResults() {
   const { results } = useMatches()
   return (
     <div>
-      {results.map((item, index) => (
+      {/* {results.map((item, index) => (
         <div
           key={index}
           className="flex flex-col h-auto border-b border-b-zinc-300"
@@ -34,36 +36,33 @@ function RenderResults() {
             ))}
           </div>
         </div>
-      ))}
+      ))} */}
     </div>
   )
 }
 
 function App() {
-  const answers = {
-    answers: [
-      {
-        content: {
-          data: 'blba'
-        },
-        references: [
-          {
-            link: 'ubots.com.br',
-            title: 'UBOTS FAQ'
-          }
-        ]
-      }
-    ]
+  const fetchData = async () => {
+    const response = await fetch({
+      question: 'Imprimir histórico de protocolo'
+    })
+
+    setAnswers(response.data)
+    console.log(response)
   }
 
-  const actions = answers.answers.map(answer => {
-    return {
-      id: answer.content.data,
-      name: answer.content.data,
-      keydwords: answer.content.data,
-      references: answer.references
-    }
-  })
+  fetchData()
+  const [answers, setAnswers] = useState([])
+  const [question, setQuestion] = useState('')
+
+  // const actions = answers.answers.map(answer => {
+  //   return {
+  //     id: answer.content.data,
+  //     name: answer.content.data,
+  //     keydwords: answer.content.data,
+  //     references: answer.references
+  //   }
+  // })
 
   let searchTime = undefined
 
@@ -77,7 +76,7 @@ function App() {
   }
 
   return (
-    <KBarProvider actions={actions}>
+    <KBarProvider actions={[]}>
       <KBarPortal className="">
         <KBarPositioner className="h-auto z-30 bg-gray-200/10 backdrop-blur-md backdrop-filter">
           <KBarAnimator className="flex flex-col gap-3  mx-auto w-[32rem] overflow-hidden rounded-xl border bg-white drop-shadow-2xl">
@@ -89,6 +88,7 @@ function App() {
                     defaultPlaceholder="Escreva aqui a sua dúvida"
                     className="w-full  border-zinc-400 bg-transparent  text-black outline-none"
                     onKeyDown={debounce}
+                    onChange={event => setQuestion(event.target.value)}
                   />
                   <span>
                     <Search
