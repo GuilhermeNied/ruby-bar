@@ -8,16 +8,17 @@ import {
   useMatches
 } from 'kbar'
 import { Search } from 'lucide-react'
+import { useState } from 'react'
 
 function RenderResults() {
   const { results } = useMatches()
-  console.log(results)
-
   return (
-    <KBarResults
-      items={results}
-      onRender={({ item, active }) => (
-        <div className="flex flex-col h-auto border-b border-b-zinc-300">
+    <div>
+      {results.map((item, index) => (
+        <div
+          key={index}
+          className="flex flex-col h-auto border-b border-b-zinc-300"
+        >
           <span className="text-md w-full">{item.name}</span>
           <div>
             {item.references.map((reference, index) => (
@@ -33,8 +34,8 @@ function RenderResults() {
             ))}
           </div>
         </div>
-      )}
-    />
+      ))}
+    </div>
   )
 }
 
@@ -55,21 +56,6 @@ function App() {
     ]
   }
 
-  // const actions = [
-  //   {
-  //     id: 'blog',
-  //     name: 'Blog',
-  //     keywords: 'writing words',
-  //     perform: () => (window.location.pathname = 'blog')
-  //   },
-  //   {
-  //     id: 'contact',
-  //     name: 'Contact',
-  //     keywords: 'email',
-  //     perform: () => (window.location.pathname = 'contact') // Pra mudar o redirecionamento
-  //   },
-  // ]
-
   const actions = answers.answers.map(answer => {
     return {
       id: answer.content.data,
@@ -78,6 +64,17 @@ function App() {
       references: answer.references
     }
   })
+
+  let searchTime = undefined
+
+  const debounce = () => {
+    if (searchTime) {
+      clearTimeout(searchTime)
+    }
+    searchTime = setTimeout(() => {
+      console.log('Teste')
+    }, 500)
+  }
 
   return (
     <KBarProvider actions={actions}>
@@ -91,6 +88,7 @@ function App() {
                   <KBarSearch
                     defaultPlaceholder="Escreva aqui a sua dúvida"
                     className="w-full  border-zinc-400 bg-transparent  text-black outline-none"
+                    onKeyDown={debounce}
                   />
                   <span>
                     <Search
